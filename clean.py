@@ -5,7 +5,7 @@ def get_options():
     parser.add_argument('-N', '--skipped_columns', action='store',
                         type=int,
                         default=30,
-                        help='How many amino acid the shortest protein should be with [Default: 14]')
+                        help='How many amino acid the shortest protein should be with [Default: 30]')
     return parser.parse_args()
 
 if __name__ == "__main__":
