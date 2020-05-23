@@ -1,2 +1,17 @@
 # RiceOrthoblast
 The main function of the Pipeline is to predict and control the quality of homologous loci for sequences of contig, scaffold, and fit assembly levels by using known gene libraries of proteins of known species.
+The main function of the Pipeline is to predict and control the quality of isogenic loci for the sequences of contig, scaffold and fit groups by using the protein gene Banks of known species.The main working process is to use the matching score principle to screen the potential homologous gene loci fragments in the genome, and then merge the dispersed fragments of a single gene (synchronous directional correction), and carry out site expansion extraction (the default extraction range is 1500bps before and after the combined fragment sites).Then, using HMM and codon coding principle, the coding region (CDS) of the extracted fragment is predicted.
+The Pipeline can generate the corresponding annotation site file (.gff) and the predicted gene protein translation file (.pep).The instructions are as follows:
+1. The git clone https://github.com/lipingfangs/RiceOrthoblast
+2. CD RiceOrthoblast
+3. Python RiceOrthoblast. Py <your referemce genomic sequence> <your genomic sequence> <number of thread wanted to use>
+Process detection is carried out through the top command. The multithreaded operation of this Pipeline is essentially a pseudo-multithreaded operation running in the background through nohup.The above steps 1-3 were used to locate the target gene location by Blast+ batch and to conduct Blast hit site merging and sequence extraction (1000bps before and after the default expanded hit region).
+4. Python geneforsee.py <number of thread wanted to use>
+Note that the number of threads in step 4 should be the same as in step 3.In step 4, the generated file is Genewise to predict the input homologous gene sequence and translate it according to the extracted region and the reference protein sequence.The generated predictive protein files are stored in the directory pepnew, one gene at a time.
+5. Python clean.py <protein sequence dir> <out file name> [-h int; How many amino acid the shortest protein should be with]
+Step 5 is to integrate the generated protein sequences and clean the data.-h is optional to determine the minimum amino acid length of the protein after cleaning (default 30).
+Instance as follows:
+1. Python RiceOrthoblast. Py osativa_204_v7.0. protein.fa oryza_hjx74_chroom_v1.0. fa 32
+2. Python geneforsee. Py 32
+3. Python clean.py pepnew hjx74ortho. pep-h 50
+Note that when a single reference gene sequence is too long (more than 1000Nt) in the Pipeline operation, there is a certain risk of core dump in memory address when Blast script is executed.According to the memory address, the cause of ejection kernel tracing is segment error memory carry -1. The trigger reason of this mechanism is unknown. After repeated running of the same sequence, the problem of ejection kernel of a single sequence can be eliminated with a certain probability.There are reports that the problem is related to the compiled Blast+ version and the HPC (high performance computing cluster) CPU model. Recompiling Blast+ may solve the problem but has not been confirmed.A single exhalation only affects a single gene sequence, and does not affect the overall operation of the pipeline.It has been reported that the occurrence of nucleation in single nucleus operation is significantly lower than that in multi-core operation in large genome operation, but there is no quantitative index of significant level.
